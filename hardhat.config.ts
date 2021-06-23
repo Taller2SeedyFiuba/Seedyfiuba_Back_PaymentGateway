@@ -1,7 +1,6 @@
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-solhint";
 import "@nomiclabs/hardhat-waffle";
-import { config as dotenvConfig } from "dotenv";
 import "hardhat-contract-sizer";
 import "hardhat-docgen";
 import "hardhat-gas-reporter";
@@ -24,7 +23,6 @@ import chai from "chai";
 import { solidity } from "ethereum-waffle";
 chai.use(solidity);
 
-dotenvConfig({ path: resolve(__dirname, "./.env") });
 
 const chainIds = {
   ganache: 1337,
