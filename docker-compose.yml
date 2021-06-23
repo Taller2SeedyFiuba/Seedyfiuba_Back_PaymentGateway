@@ -1,0 +1,32 @@
+version: "3"
+services:
+    payment-gateway-service:
+        build: ./
+        volumes:
+            - ./src:/app/src
+        container_name: payment-gateway-service
+        restart: always
+        env_file:
+          - .env
+        networks:
+            - my-net
+        ports:
+            - 8080:8080
+        depends_on:
+            - psql-payments-container
+        command: npm run dev
+    psql-payments-container:
+        image: postgres
+        container_name: psql-payments-container
+        environment:
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            - ./sql/Inicializar_base.sql:/docker-entrypoint-initdb.d/init.sql
+        ports:
+            - 5430:5432
+        networks:
+            - my-net
+
+networks:
+    my-net:
+        driver: bridge
