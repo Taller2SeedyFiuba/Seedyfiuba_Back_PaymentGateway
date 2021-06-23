@@ -1,8 +1,8 @@
-![example workflow](https://github.com/Taller2SeedyFiuba/Seedyfiuba_API_Gateway/actions/workflows/main.yml/badge.svg)
+![example workflow](https://github.com/Taller2SeedyFiuba/Seedyfiuba_Back_PaymentGateway/actions/workflows/main.yml/badge.svg)
 
 # SeedyFiuba Back Payments Gateway
 
-Microservicio que actua core de pagos y coneccion con la blockchain de ETH.
+Microservice that acts as payment core and connection to ETH network.
 
 ### Built With
 
