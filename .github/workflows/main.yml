@@ -29,8 +29,8 @@ jobs:
           heroku_email: "tnocetti@fi.uba.ar"
           usedocker: true
           docker_build_args: |
-            NODE_ENV
-            SECRET_KEY
+            INFURA_API_KEY
+            MNEMONIC
         env:
-          NODE_ENV: production
-          SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
+          INFURA_API_KEY: ${{secrets.INFURA_API_KEY}}
+          MNEMONIC: ${{secrets.MNEMONIC}}
