@@ -28,9 +28,3 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: "tnocetti@fi.uba.ar"
           usedocker: true
-          docker_build_args: |
-            INFURA_API_KEY
-            MNEMONIC
-        env:
-          INFURA_API_KEY: ${{secrets.INFURA_API_KEY}}
-          MNEMONIC: ${{secrets.MNEMONIC}}
