@@ -11,8 +11,8 @@ const { getAPIStatus } = require("./controllers/status");
 //Importamos handlers de error
 const { notDefinedHandler, errorHandler, hocError } = require("./errors/handler");
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./docs/openapi.json');
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./docs/openapi.json");
 
 function createApp(database, log = true) {
   //Iniciamos la aplicacion
@@ -24,8 +24,8 @@ function createApp(database, log = true) {
   app.use(json());
 
   //Rutas
-  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  
+  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
   app.use("/api/status", hocError(getAPIStatus));
   app.use("/api/wallets", getWalletsRouter());
 

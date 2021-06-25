@@ -26,7 +26,7 @@ services:
             - 5430:5432
         networks:
             - my-net
-
 networks:
-    my-net:
-        driver: bridge
+  my-net:
+    external:
+      name: my-net
