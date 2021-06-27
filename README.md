@@ -43,7 +43,7 @@ docker-compose up --b
 
 Swagger is used to document the API structure. 
 ```
-{HOST}/api/api-docs
+{HOST}/api/docs
 ```
 
 ## Testing
@@ -51,12 +51,6 @@ Swagger is used to document the API structure.
 #### Unit Tests
 ```npm
 npm run test-api
-```
-
-#### Hardhat Tests
-
-```npm
-npm run test
 ```
 
 ## Production Deployment CI

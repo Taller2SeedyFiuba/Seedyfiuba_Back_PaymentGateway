@@ -1,0 +1,129 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "SeedyFiuba Payments Gateway"
+  },
+  "tags": [
+    {
+      "name": "wallet",
+      "description": "Everything about user-wallets"
+    }
+  ],
+  "paths": {
+    "/wallets": {
+      "post": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Create a wallet for a given user",
+        "operationId": "createUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerid": {
+                    "type": "string",
+                    "example": "uhasj31asidasdicaw"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/wallets/{ownerid}": {
+      "get": {
+        "tags": [
+          "wallet"
+        ],
+        "summary": "Get a wallet for a given user",
+        "operationId": "getWallet",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ownerid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Owner ID of the wallet"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Wallet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "User has no wallet."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Wallet": {
+        "type": "object",
+        "properties": {
+          "ownerid": {
+            "type": "string",
+            "example": "05yseyhiEWPNvkYYbdHL77dHKWi1"
+          },
+          "address": {
+            "type": "string",
+            "example": "0x7Ab685de2aD2506dBE722934834e3C4800D3c8E4"
+          },
+          "creationdate": {
+            "type": "string",
+            "example": "2021-03-14"
+          },
+          "balance": {
+            "type": "string",
+            "description": "Balance en ethers",
+            "example": "0.0023"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
