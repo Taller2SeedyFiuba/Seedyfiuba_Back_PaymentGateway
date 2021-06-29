@@ -5,6 +5,7 @@ const cors = require("cors");
 
 //Importamos rutas/endpoints
 const { getWalletsRouter } = require("./routes/wallet");
+const { getProjectsRouter } = require("./routes/project");
 
 const { getAPIStatus } = require("./controllers/status");
 
@@ -28,6 +29,7 @@ function createApp(database, log = true) {
 
   app.use("/api/status", hocError(getAPIStatus));
   app.use("/api/wallets", getWalletsRouter());
+  app.use("/api/projects", getProjectsRouter());
 
   app.use(notDefinedHandler);
   app.use(errorHandler);

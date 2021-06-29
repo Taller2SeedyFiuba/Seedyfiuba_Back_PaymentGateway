@@ -7,6 +7,7 @@ const { ApiError } = require("../errors/ApiError");
 const provider = new ethers.providers.InfuraProvider("kovan", process.env.INFURA_API_KEY);
 
 const getDeployerWallet = () => {
+  console.log(config.deployerMnemonic)
   return ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
 };
 
