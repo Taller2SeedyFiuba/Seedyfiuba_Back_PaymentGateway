@@ -93,7 +93,7 @@ test("/createProject successful response", async () => {
   expect(res.json).toHaveBeenCalledWith(resObj.data);
 });
 
-test("/createWallet unsuccessful response, already created", async () => {
+test("/createProject unsuccessful response, already created", async () => {
   const req = {
     body: {
       ownerid: "1",
@@ -111,7 +111,7 @@ test("/createWallet unsuccessful response, already created", async () => {
   }
 });
 
-test("/createWallet unsuccessful response, bad formatted", async () => {
+test("/createProject unsuccessful response, bad formatted", async () => {
   const req = {
     body: {
       id: "testUser",

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const network = "kovan";
 
+const ethers = require("ethers");
 const fetch = require("node-fetch");
 
 let artifactUrl = process.env.DEPLOY_ARTIFACT_URL;
@@ -21,6 +22,7 @@ fetch(artifactUrl, settings)
 
 const deployerMnemonic = process.env.MNEMONIC;
 const infuraApiKey = process.env.INFURA_API_KEY;
+
 
 console.log(deployerMnemonic);
 module.exports = {

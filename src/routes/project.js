@@ -7,6 +7,8 @@ function getProjectsRouter() {
 
   router.get("/:projectid", hocError(pc.get));
 
+  router.post("/:projectid/transactions", hocError(pc.postTransacton));
+
   return router;
 }
 

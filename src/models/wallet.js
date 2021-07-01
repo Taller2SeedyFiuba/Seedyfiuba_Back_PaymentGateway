@@ -1,19 +1,14 @@
 const { Wallet, sequelize } = require("../database");
-
-const ethers = require("ethers");
-const config = require("../config");
 const { ApiError } = require("../errors/ApiError");
 
-const provider = new ethers.providers.InfuraProvider("kovan", process.env.INFURA_API_KEY);
-
-const getDeployerWallet = () => {
-  console.log(config.deployerMnemonic)
-  return ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
-};
+const bch = require("../services/blockchain");
 
 const createWallet = async payload => {
   // This may break in some environments, keep an eye on it
-  const wallet = ethers.Wallet.createRandom().connect(provider);
+  const response = await Wallet.findByPk(payload.ownerid);
+  if (response) throw ApiError.badRequest("User already has a wallet");
+
+  const wallet = bch.createWallet();
 
   return await Wallet.create({
     ownerid: payload.ownerid,
@@ -24,21 +19,13 @@ const createWallet = async payload => {
 
 const getWallet = async id => {
   const response = await Wallet.findByPk(id);
-  if (!response) return undefined;
+  if (!response) throw ApiError.notFound("Wallet not found");
 
-  let balanceInWeis;
-
-  try {
-    console.log(response.privatekey);
-    const walletInstance = new ethers.Wallet(response.privatekey).connect(provider);
-    balanceInWeis = await walletInstance.getBalance();
-  } catch (err) {
-    throw ApiError.externalServiceError("Kovan request error");
-  }
+  let balanceInEther = await bch.getWalletBalance(response.privatekey);
 
   return {
     ...response.dataValues,
-    balance: ethers.utils.formatUnits(balanceInWeis),
+    balance: balanceInEther,
   };
 };
 
@@ -48,7 +35,6 @@ const getStatus = async () => {
 
 module.exports = {
   createWallet,
-  getDeployerWallet,
   getWallet,
   getStatus,
 };

@@ -29,3 +29,18 @@ exports.get = async (req, res, next) => {
     data: projectInDatabase,
   });
 };
+
+exports.postTransacton = async (req, res, next) => {
+  const { error, value } = validateProject(req.body);
+  if (error) throw ApiError.badRequest(error.message);
+
+  const projectInDatabase = await getProject(req.body.projectid);
+  if (projectInDatabase) throw ApiError.badRequest("Project already in smart-contract");
+
+  const project = await createProject(req.body);
+
+  res.status(201).json({
+    status: "success",
+    data: project,
+  });
+};

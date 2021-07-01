@@ -1,3 +1,5 @@
+const { ApiError } = require("../../errors/ApiError");
+
 const testWall = {
   ownerid: "testUser",
   address: "0x9386C488A765BE858ca89219F4E837A0437CEfA9",
@@ -6,6 +8,10 @@ const testWall = {
 };
 
 const createWallet = async user => {
+  if (user.ownerid === "testUser") {
+    throw ApiError.badRequest("User already has a wallet");
+  }
+
   return {
     ownerid: user.ownerid,
     address: "0x9386C488A765BE858ca89219F4E837A0437CEfA9",
@@ -16,6 +22,7 @@ const createWallet = async user => {
 
 const getWallet = async id => {
   if (id === "testUser") return testWall;
+  throw ApiError.notFound("Wallet not found");
 };
 
 module.exports = { createWallet, getWallet, testWall };
