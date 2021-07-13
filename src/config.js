@@ -17,17 +17,23 @@ fetch(artifactUrl, settings)
   })
   .catch(err => {
     console.log(err);
-    console.error("No smart-contract available");
+    throw new Error("No smart-contract available");
   });
 
-const deployerMnemonic = process.env.MNEMONIC;
+const deployerMnemonic = process.env.NODE_ENV !== 'testing' ? process.env.MNEMONIC : 'test test test test test test test test test test test junk';
 const infuraApiKey = process.env.INFURA_API_KEY;
 
 
 console.log(deployerMnemonic);
 module.exports = {
-  contractAddress: () => deployArtifact.address,
-  contractAbi: () => deployArtifact.abi,
+  contractAddress: () => {
+    if (!deployArtifact.address) throw new Error("No smart-contract available");
+    return deployArtifact.address;
+  },
+  contractAbi: () => {
+    if (!deployArtifact.abi) throw new Error("No smart-contract available");
+    return deployArtifact.abi;
+  },
   deployerMnemonic,
   infuraApiKey,
   network,

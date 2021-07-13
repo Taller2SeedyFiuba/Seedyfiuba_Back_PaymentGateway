@@ -7,6 +7,7 @@ const { ApiError } = require("../errors/ApiError");
 
 const getProject = async id => {
   const response = await Project.findByPk(id);
+
   if (!response) return undefined;
 
   return {
@@ -15,22 +16,14 @@ const getProject = async id => {
 };
 
 const createProject = async (payload) => {
-  const ownerWallet = await getWallet(payload.ownerid);
-  const smcid = await bch.createProject({
-    ... payload,
-    ownerAddress: ownerWallet.address,
-  });
-  console.log(ownerWallet.address);
-
   const project = await Project.create({
     ownerid: payload.ownerid,
     projectid: payload.projectid,
-    smcid,
+    smcid: payload.smcid,
   });
 
   return {
     ... project.dataValues,
-    state: 'on_review'
   }
 };
 

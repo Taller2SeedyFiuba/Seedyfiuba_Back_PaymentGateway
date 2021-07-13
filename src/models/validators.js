@@ -18,4 +18,29 @@ function validateProject(project) {
   return JoiSchema.validate(project);
 }
 
-module.exports = { validateWallet, validateProject };
+function validateId(viwer) {
+  const JoiSchema = Joi.object({
+    ownerid: Joi.string().max(255).required(),
+  }).options({ abortEarly: false });
+
+  return JoiSchema.validate(viwer);
+}
+
+function validateTransaction(transaction) {
+  const JoiSchema = Joi.object({
+    ownerid: Joi.string().max(255).required(),
+    amount: Joi.number().positive().required(),
+  }).options({ abortEarly: false });
+
+  return JoiSchema.validate(transaction);
+}
+
+function validateViewerVote(vote) {
+  const JoiSchema = Joi.object({
+    completedStage: Joi.number().positive().required(),
+  }).options({ abortEarly: false });
+
+  return JoiSchema.validate(vote);
+}
+
+module.exports = { validateWallet, validateProject, validateId, validateViewerVote, validateTransaction };
