@@ -1,5 +1,6 @@
 const testProj = {
   ownerid: "testUser",
+  smcid: "10",
   projectid: "10",
   creationdate: "2021-06-23",
   balance: "0.001",

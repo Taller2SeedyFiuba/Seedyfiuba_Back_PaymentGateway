@@ -1,9 +1,13 @@
 const { post, get } = require("./project");
 
 const { testProj } = require("../models/__mocks__/project");
+const { testProjBch } = require("../services/__mocks__/blockchain");
 const { ApiError } = require("../errors/ApiError");
 
 jest.mock("../models/project");
+jest.mock("../models/wallet");
+jest.mock("../services/blockchain");
+
 
 const mockResponse = () => {
   const res = {};
@@ -22,7 +26,10 @@ test("/getOneProject successful response", async () => {
   const resObj = {
     data: {
       status: "success",
-      data: testProj,
+      data: {
+        ...testProj,
+        ...testProjBch,
+      }
     },
   };
 
@@ -67,9 +74,9 @@ test("/getOneProject unsuccessful response, bad formatted", async () => {
 test("/createProject successful response", async () => {
   const req = {
     body: {
-      ownerid: "1",
+      ownerid: "testUser",
       projectid: "20",
-      stages: [20, 10, 30]
+      stages: [0.02, 0.01, 0.03]
     },
   };
 
@@ -77,7 +84,9 @@ test("/createProject successful response", async () => {
     data: {
       status: "success",
       data: {
-        ownerid: "1",
+        currentStage: 0,
+        missingAmount: 0.06,
+        ownerid: "testUser",
         projectid: "20",
         smcid: "20",
         state: "on_review"
@@ -96,9 +105,9 @@ test("/createProject successful response", async () => {
 test("/createProject unsuccessful response, already created", async () => {
   const req = {
     body: {
-      ownerid: "1",
-      projectid: testProj.projectid,
-      stages: [20, 10, 30]
+      ownerid: "testUser",
+      projectid: "10",
+      stages: [0.02, 0.01, 0.03]
     },
   };
 
