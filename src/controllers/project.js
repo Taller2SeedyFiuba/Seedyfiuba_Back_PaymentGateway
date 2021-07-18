@@ -69,12 +69,13 @@ exports.postTransacton = async (req, res, next) => {
 
   if (projectInBlockchain.state != 'funding') throw ApiError.badRequest("Project not in correct state");
 
-  await bch.transferToProject(projectInDatabase.smcid, ownerWallet.privatekey, req.body.amount);
+  const amount = await bch.transferToProject(projectInDatabase.smcid, ownerWallet.privatekey, req.body.amount);
   projectInBlockchain = await bch.getProject(projectInDatabase.smcid);
 
   res.status(201).json({
     status: "success",
     data: {
+      amount,
       ... projectInDatabase,
       ... projectInBlockchain,
     },

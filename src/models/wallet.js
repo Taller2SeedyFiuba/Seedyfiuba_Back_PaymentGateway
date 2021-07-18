@@ -18,8 +18,10 @@ const createWallet = async payload => {
 };
 
 const getWallet = async id => {
-  const response = await Wallet.findByPk(id);
-  if (!response) throw ApiError.notFound("Wallet not found");
+  let response = await Wallet.findByPk(id);
+  if (!response) {
+    throw ApiError.notFound("Wallet not found");
+  }
 
   let balanceInEther = await bch.getWalletBalance(response.privatekey);
 

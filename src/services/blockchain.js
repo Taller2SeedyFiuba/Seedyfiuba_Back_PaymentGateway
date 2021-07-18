@@ -45,13 +45,19 @@ const gweiToWei = number => {
 
 
 const getDeployerWallet = () => {
+  if (process.env.NODE_ENV === 'testing') {
+    const wallet = new ethers.Wallet('0x48bc56a0196d9090a6fae0fd426531da067879c1e4b452f0b97354b73562b942').connect(provider);
+    return wallet;
+  }
   const deployerWallet = ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
   return deployerWallet;
 };
 
 const createWallet = () => {
   if (process.env.NODE_ENV === 'testing') {
-    return getTestWallet();
+    const wallet = ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
+
+    return wallet;
   }
   const wallet = ethers.Wallet.createRandom().connect(provider);
   return wallet;
@@ -129,14 +135,13 @@ const transferToProject = async (smcid, privatekey, amount) => {
 
     const receipt = await tx.wait(1);
     const firstEvent = receipt && receipt.events && receipt.events[0];
-    console.log(firstEvent);
+
     if (firstEvent && firstEvent.event == "ProjectFunded") {
       const projectId = firstEvent.args.projectId.toNumber();
-      const secondEvent = receipt && receipt.events && receipt.events[1];
-      if(secondEvent && secondEvent.event == "ProjectStarted") {
-        return PROJECT_STAGES[2];
-      }
-      return PROJECT_STAGES[0];
+      
+      const amount = weisToEthers(firstEvent.args.funds);
+      console.log("PROJECTFUNDED: ", projectId, amount);
+      return amount;
     }
   } catch (err) {
     throw ApiError.externalServiceError("Project couldn't be funded");
@@ -151,7 +156,7 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
     const tx = await seedyfiubaSC.addReviewer(smcid, {
       gasLimit: 4000000,
     });
-    // console.log(tx);
+
     const receipt = await tx.wait(1);
     const firstEvent = receipt && receipt.events && receipt.events[0];
 
@@ -169,14 +174,13 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
 }
 
 const voteProjectStage = async (smcid, privatekeyViewer, stageNumber) => {
-  console.log(smcid, privatekeyViewer, stageNumber);
   try {
     const seedyfiubaSC = await getContractForUser(privatekeyViewer);
 
     const tx = await seedyfiubaSC.setCompletedStage(smcid, stageNumber, {
       gasLimit: 4000000,
     });
-    // console.log(tx);
+
     const receipt = await tx.wait(1);
 
     const thirdEvent = receipt && receipt.events && receipt.events[2];
