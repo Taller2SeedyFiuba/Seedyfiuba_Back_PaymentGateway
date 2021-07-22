@@ -37,7 +37,7 @@ function validateTransaction(transaction) {
 
 function validateViewerVote(vote) {
   const JoiSchema = Joi.object({
-    completedStage: Joi.number().positive().required(),
+    completedStage: Joi.number().min(0).required(),
   }).options({ abortEarly: false });
 
   return JoiSchema.validate(vote);
