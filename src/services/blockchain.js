@@ -45,7 +45,7 @@ const gweiToWei = number => {
 
 
 const getDeployerWallet = () => {
-  if (process.env.NODE_ENV === 'testing') {
+  if (process.env.SMC_ENV === 'testing') {
     const wallet = new ethers.Wallet('0x48bc56a0196d9090a6fae0fd426531da067879c1e4b452f0b97354b73562b942').connect(provider);
     return wallet;
   }
@@ -54,7 +54,7 @@ const getDeployerWallet = () => {
 };
 
 const createWallet = () => {
-  if (process.env.NODE_ENV === 'testing') {
+  if (process.env.SMC_ENV === 'testing') {
     const wallet = ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
 
     return wallet;
