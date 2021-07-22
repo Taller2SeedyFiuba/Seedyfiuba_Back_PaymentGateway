@@ -8,7 +8,7 @@ const { getTestWallet } = require("./test-wallets");
 
 let provider;
 
-if (process.env.NODE_ENV === 'testing') {
+if (process.env.SMC_ENV === 'testing') {
   console.log("TEST PROVIDER");
   provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_PROVIDER);
 } else {
