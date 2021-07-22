@@ -138,7 +138,7 @@ const transferToProject = async (smcid, privatekey, amount) => {
 
     if (firstEvent && firstEvent.event == "ProjectFunded") {
       const projectId = firstEvent.args.projectId.toNumber();
-      
+
       const amount = weisToEthers(firstEvent.args.funds);
       console.log("PROJECTFUNDED: ", projectId, amount);
       return amount;

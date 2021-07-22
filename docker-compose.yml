@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
     payment-gateway-service:
         build: ./
@@ -10,10 +10,11 @@ services:
           - .env
         networks:
             - my-net
-        ports:
-            - 8080:8080
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         depends_on:
             - psql-payments-container
+
         command: npm run dev
     psql-payments-container:
         image: postgres
@@ -23,7 +24,7 @@ services:
         volumes:
             - ./sql/Inicializar_base.sql:/docker-entrypoint-initdb.d/init.sql
         ports:
-            - 5430:5432
+            - 5420:5432
         networks:
             - my-net
 networks:
