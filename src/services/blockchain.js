@@ -10,7 +10,7 @@ let provider;
 
 if (process.env.NODE_ENV === 'testing') {
   console.log("TEST PROVIDER");
-  provider = new ethers.providers.JsonRpcProvider("http://host.docker.internal:8545/");
+  provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_PROVIDER);
 } else {
   provider = new ethers.providers.InfuraProvider(process.env.BCH_PROVIDER, process.env.INFURA_API_KEY);
 }
