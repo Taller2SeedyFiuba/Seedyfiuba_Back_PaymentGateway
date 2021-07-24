@@ -55,6 +55,7 @@ const getDeployerWallet = () => {
 
 const createWallet = () => {
   if (process.env.SMC_ENV === 'testing') {
+
     return new ethers.Wallet(getTestWallet().privateKey).connect(provider);
   }
   const wallet = ethers.Wallet.createRandom().connect(provider);
