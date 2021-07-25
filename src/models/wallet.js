@@ -8,7 +8,21 @@ const createWallet = async payload => {
   const response = await Wallet.findByPk(payload.ownerid);
   if (response) throw ApiError.badRequest("User already has a wallet");
 
-  const wallet = bch.createWallet();
+  let wallet = 0;
+  let found = true;
+  let contador = 0; //DEBUG
+  console.log('CREANDO BILLETERA')
+  while(found){
+    console.log(`ITERACION ${contador}`)
+    contador += 1;
+    wallet = bch.createWallet();
+    found = await Wallet.findOne({
+      'where': {
+        address: wallet.address,
+        privatekey: wallet.privateKey,
+      }
+    })
+  }
 
   return await Wallet.create({
     ownerid: payload.ownerid,
