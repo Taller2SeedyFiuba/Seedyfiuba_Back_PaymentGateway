@@ -4,7 +4,6 @@ const ethers = require("ethers");
 const config = require("../config");
 const BigNumber = require("bignumber.js");
 const { ApiError } = require("../errors/ApiError");
-const { getTestWallet } = require("./test-wallets");
 
 let provider;
 
@@ -45,18 +44,13 @@ const gweiToWei = number => {
 
 
 const getDeployerWallet = () => {
-  if (process.env.SMC_ENV === 'testing') {
-    const wallet = new ethers.Wallet('0x48bc56a0196d9090a6fae0fd426531da067879c1e4b452f0b97354b73562b942').connect(provider);
-    return wallet;
-  }
   const deployerWallet = ethers.Wallet.fromMnemonic(config.deployerMnemonic).connect(provider);
   return deployerWallet;
 };
 
 const createWallet = () => {
   if (process.env.SMC_ENV === 'testing') {
-
-    return new ethers.Wallet(getTestWallet().privateKey).connect(provider);
+    return ethers.Wallet.fromMnemonic(config.deployerMnemonic, `m/44'/60'/0'/0/${Math.floor(Math.random() * 5000) + 1}`).connect(provider);
   }
   const wallet = ethers.Wallet.createRandom().connect(provider);
   return wallet;
