@@ -23,8 +23,6 @@ fetch(artifactUrl, settings)
 const deployerMnemonic = process.env.MNEMONIC;
 const infuraApiKey = process.env.INFURA_API_KEY;
 
-
-console.log(deployerMnemonic);
 module.exports = {
   contractAddress: () => {
     if (!deployArtifact.address) throw new Error("No smart-contract available");

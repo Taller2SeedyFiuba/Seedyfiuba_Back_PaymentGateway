@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Wallet.beforeCreate((user, options) => {
-    user.createdate = new Date().toISOString();
+    user.creationdate = new Date().toISOString();
   });
 
   return Wallet;
