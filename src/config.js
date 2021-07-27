@@ -20,7 +20,7 @@ fetch(artifactUrl, settings)
     throw new Error("No smart-contract available");
   });
 
-const deployerMnemonic = process.env.NODE_ENV !== 'testing' ? process.env.MNEMONIC : 'test test test test test test test test test test test junk';
+const deployerMnemonic = process.env.MNEMONIC;
 const infuraApiKey = process.env.INFURA_API_KEY;
 
 

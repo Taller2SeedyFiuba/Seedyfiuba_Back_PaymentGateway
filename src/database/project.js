@@ -4,11 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     "Project",
     {
       projectid: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         primaryKey: true,
       },
       ownerid: DataTypes.STRING,
-      smcid: DataTypes.NUMBER,
+      smcid: DataTypes.INTEGER,
     },
     {
       tableName: "projects",
