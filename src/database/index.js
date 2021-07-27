@@ -6,17 +6,11 @@ const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const db = {};
-let options = { logging: false };
+const data = require("../database-config.js");
 
 console.log("Conectando con base de datos: \n\t" + process.env.DATABASE_URL + "\n");
 
-//Cambiar por chequeo de produccion o desarrollo
-if (env == "production") {
-  options["logging"] = console.log;
-  options["dialectOptions"] = { ssl: { require: true, rejectUnauthorized: false } };
-}
-
-let sequelize = new Sequelize(process.env.DATABASE_URL, options);
+let sequelize = new Sequelize(data[process.env.NODE_ENV].url, data[process.env.NODE_ENV]);
 
 fs.readdirSync(__dirname)
   .filter(file => {
@@ -35,5 +29,17 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.checkStatus = async function(verbose=false){
+  try {
+    await sequelize.authenticate()
+    if (verbose)
+      console.log("La conexion con la base de datos se ha realizado satisfactoriamente")
+    return true
+  } catch (err) {
+    if (verbose)
+      throw Error("La conexion con la base de datos ha fallado, " + err.message)
+    return false
+  }
+}
 
 module.exports = db;
