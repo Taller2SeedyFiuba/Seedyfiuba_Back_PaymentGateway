@@ -1,58 +1,69 @@
 const { ApiError } = require("./ApiError");
+const { logError, logWarn } = require('../utils/log')
+const errMsg = require("./messages")
 
-function msErrorHandler(err) {
+function logErrorByCode(code, message){
+  if (code >= 500){
+    logError(message)
+  } else{
+    logWarn(message)
+  }
+}
+
+function errorResponse(res, status, error){
+  return res.status(status).json({
+    "status": "error",
+    "message": error
+  })
+}
+
+function msErrorHandler(err, res) {
   const { response, request, message } = err;
 
   if (response) {
-    console.log(response.data, response.status);
-    throw new ApiError(response.status, response.data.error);
+    logErrorByCode(response.status, response.data);
+    return errorResponse(res, response.status, response.data.message)
   } else if (request) {
-    console.log(request);
-    throw ApiError.dependencyError("back-payment-req-error");
+    logError(ApiError.codes.dependencyError, request);
+    return errorResponse(res, ApiError.codes.dependencyError, errMsg.PAYMENTS_REQ_ERROR)
   } else {
-    console.log("Error", message);
-    throw ApiError.dependencyError("back-payment-unavailable");
+    logError(message);
+    return errorResponse(res, ApiError.codes.dependencyError, errMsg.PAYMENTS_UNAVAILABLE)
   }
 }
 
 function notDefinedHandler(req, res, next) {
   //Create error msg
-  let error = ApiError.notFound("Asked resource do not exists");
+  const error = ApiError.notFound(errMsg.RESOURCE_NOT_FOUND)
   next(error);
 }
 
-function errorHandler(error, req, res, next) {
-  console.log("ACA");
-  if (error instanceof ApiError) {
-    return res.status(error.code).json({
-      status: "error",
-      message: error.message,
-    });
-  }
-  if (error instanceof Error) {
-    if (error.status && error.status < 500) {
-      return res.status(error.status).json({
-        status: "error",
-        error: error.message,
-      });
-    }
-  }
 
-  console.error("SERVER ERROR: " + error.message);
-  return res.status(500).json({
-    status: "error",
-    error: "internal-server-error",
-  });
+function errorHandler(error, req, res, next) {
+  if (error instanceof ApiError) {
+    logErrorByCode(error.code, error.message)
+    return errorResponse(res, error.code, error.message)
+  }
+  if (error.isAxiosError){
+    return msErrorHandler(error, res)
+  }
+  if (error.status && error.status < 500) {
+    logWarn(error.message)
+    return errorResponse(res, error.status, error.message || errMsg.UNKNOWN_ERROR)
+  }
+  logError(error.message || errMsg.UNKNOWN_ERROR)
+  return errorResponse(res, error.status || ApiError.codes.serverError, errMsg.INTERNAL_ERROR)
 }
 
-const hocError = fn => (req, res, next) => {
-  console.log(req.body);
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
+
+const hocError = fn => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+
 
 module.exports = {
   notDefinedHandler,
   msErrorHandler,
   errorHandler,
-  hocError,
-};
+  hocError
+}
+

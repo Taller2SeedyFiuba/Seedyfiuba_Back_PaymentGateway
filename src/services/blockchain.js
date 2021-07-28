@@ -4,11 +4,13 @@ const ethers = require("ethers");
 const config = require("../config");
 const BigNumber = require("bignumber.js");
 const { ApiError } = require("../errors/ApiError");
+const errMsg = require('../errors/messages');
+const { logDebug, logError, logInfo } = require("../utils/log");
 
 let provider;
 
 if (process.env.SMC_ENV === 'testing') {
-  console.log("TEST PROVIDER");
+  logDebug("TEST PROVIDER");
   provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_PROVIDER);
 } else {
   provider = new ethers.providers.InfuraProvider(process.env.BCH_PROVIDER, process.env.INFURA_API_KEY);
@@ -21,7 +23,7 @@ const _getWalletFromNetwork = (privatekey) => {
     const walletInstance = new ethers.Wallet(privatekey).connect(provider);
     return walletInstance;
   } catch (err) {
-    throw ApiError.externalServiceError("Kovan request error");
+    throw ApiError.externalServiceError(errMsg.KOVAN_REQ_ERROR);
   }
 }
 
@@ -93,17 +95,17 @@ const createProject = async (ownerAddress, stages) => {
       return smcid;
     }
   } catch (err) {
-    console.log(err);
-    throw ApiError.externalServiceError("Project couldn't be mined");
+    logError(err);
+    throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_MINING);
   }
-  throw ApiError.externalServiceError("Project couldn't be mined");
+  throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_MINING);
 }
 
 const getProject = async (smcid) => {
   try{
     const seedyfiubaSC = await getContract();
     const tx = await seedyfiubaSC.projects(smcid);
-    console.log(tx);
+    logInfo(tx);
     return {
       smcid,
       currentStage: tx.currentStage.toString(),
@@ -111,7 +113,7 @@ const getProject = async (smcid) => {
       missingAmount: weisToEthers(tx.missingAmount)
     }
   } catch (err) {
-    throw ApiError.externalServiceError("Project couldn't be found");
+    throw ApiError.externalServiceError(errMsg.PROJECT_NOT_FOUND);
   }
 }
 
@@ -120,7 +122,7 @@ const transferToProject = async (smcid, privatekey, amount) => {
 
     const seedyfiubaSC = await getContractForUser(privatekey);
 
-    console.log(ethersToWei(amount));
+    logInfo(ethersToWei(amount));
     const tx = await seedyfiubaSC.fund(smcid, {
       gasLimit: 4000000,
       value: ethersToWei(amount),
@@ -133,13 +135,13 @@ const transferToProject = async (smcid, privatekey, amount) => {
       const projectId = firstEvent.args.projectId.toNumber();
 
       const amount = weisToEthers(firstEvent.args.funds);
-      console.log("PROJECTFUNDED: ", projectId, amount);
+      logInfo("PROJECTFUNDED: ", projectId, amount);
       return amount;
     }
   } catch (err) {
-    throw ApiError.externalServiceError("Project couldn't be funded");
+    throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_FUNDING);
   }
-  throw ApiError.externalServiceError("Project couldn't be funded");
+  throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_FUNDING);
 }
 
 const addViwerToProject = async (smcid, privatekeyViewer) => {
@@ -161,9 +163,9 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
       return "on_review";
     }
   } catch (err) {
-    throw ApiError.externalServiceError(`Viewer couldn't be added: ${err.error.message}`);
+    throw ApiError.externalServiceError(`${errMsg.VIEWER_ERROR_ADDING}: ${err.error.message}`);
   }
-  throw ApiError.externalServiceError("Viewer couldn't be added");
+  throw ApiError.externalServiceError(errMsg.VIEWER_ERROR_ADDING);
 }
 
 const voteProjectStage = async (smcid, privatekeyViewer, stageNumber) => {
@@ -191,10 +193,10 @@ const voteProjectStage = async (smcid, privatekeyViewer, stageNumber) => {
       return "in_progress";
     }
   } catch (err) {
-    console.log(err);
-    throw ApiError.externalServiceError(`Viewer couldn't vote: ${err.error.message}`);
+    logError(err);
+    throw ApiError.externalServiceError(`${errMsg.VIEWER_ERROR_VOTING}: ${err.error.message}`);
   }
-  throw ApiError.externalServiceError("Viewer couldn't vote");
+  throw ApiError.externalServiceError(errMsg.VIEWER_ERROR_VOTING);
 }
 
 module.exports = {

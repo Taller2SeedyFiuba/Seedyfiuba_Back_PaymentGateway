@@ -3,6 +3,7 @@ const network = "kovan";
 
 const ethers = require("ethers");
 const fetch = require("node-fetch");
+const errMsg = require('./errors/messages');
 
 let artifactUrl = process.env.DEPLOY_ARTIFACT_URL;
 
@@ -16,8 +17,8 @@ fetch(artifactUrl, settings)
     deployArtifact = deployArtifactWeb;
   })
   .catch(err => {
-    console.log(err);
-    throw new Error("No smart-contract available");
+    console.log(`Error: ` + err)
+    throw new Error(errMsg.NO_SMART_CONTRACT);
   });
 
 const deployerMnemonic = process.env.MNEMONIC;
@@ -25,14 +26,20 @@ const infuraApiKey = process.env.INFURA_API_KEY;
 
 module.exports = {
   contractAddress: () => {
-    if (!deployArtifact.address) throw new Error("No smart-contract available");
+    if (!deployArtifact.address) throw new Error(errMsg.NO_SMART_CONTRACT);
     return deployArtifact.address;
   },
   contractAbi: () => {
-    if (!deployArtifact.abi) throw new Error("No smart-contract available");
+    if (!deployArtifact.abi) throw new Error(errMsg.NO_SMART_CONTRACT);
     return deployArtifact.abi;
   },
   deployerMnemonic,
   infuraApiKey,
   network,
+  log: {
+    error: process.env.LOG_ERROR == undefined || process.env.LOG_ERROR.toLowerCase() == 'true',
+    warn: process.env.LOG_WARN == undefined || process.env.LOG_WARN.toLowerCase() == 'true',
+    info: process.env.LOG_INFO == undefined || process.env.LOG_INFO.toLowerCase() == 'true',
+    debug: process.env.LOG_DEBUG == undefined || process.env.LOG_DEBUG.toLowerCase() == 'true',
+  }
 };
