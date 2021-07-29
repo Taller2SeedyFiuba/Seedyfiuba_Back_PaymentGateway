@@ -2,6 +2,7 @@ const express = require("express");
 const json = require("express").json;
 const morgan = require("morgan");
 const cors = require("cors");
+const { log } = require('./config')
 
 //Importamos rutas/endpoints
 const { getWalletsRouter } = require("./routes/wallet");
@@ -15,12 +16,22 @@ const { notDefinedHandler, errorHandler, hocError } = require("./errors/handler"
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./docs/openapi.json");
 
-function createApp(database, log = true) {
+function createApp() {
   //Iniciamos la aplicacion
   const app = express();
 
   //Middlewares
-  if (log) app.use(morgan("dev")); //Escupir a archivo con una ip y timestamp.
+  if(log.info){
+    app.use(morgan(function (tokens, req, res) {
+      return [
+        'Info:',
+        tokens.method(req, res),
+        tokens.url(req, res), '-',
+        tokens.status(req, res), '-',
+        tokens['response-time'](req, res), 'ms'
+      ].join(' ')
+    }));
+  }
   app.use(cors());
   app.use(json());
 

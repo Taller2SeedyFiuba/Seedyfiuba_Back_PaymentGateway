@@ -33,6 +33,7 @@ Docker-cli must be installed.
    ```
 3. Set up environment variables based on ```.env.example```.
 
+4. For this service to properly work a SmartContract artifact based on https://github.com/Taller2SeedyFiuba/Seedyfiuba_SmartContract needs to be provided in an env variable. A local node can be run with that repo in JSONRPC mode. If a real test net is used then Infura is the output gateway.
 ## Usage
 
 ```docker

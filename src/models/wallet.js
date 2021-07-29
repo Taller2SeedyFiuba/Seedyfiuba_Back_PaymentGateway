@@ -1,20 +1,17 @@
 const { Wallet, sequelize } = require("../database");
 const { ApiError } = require("../errors/ApiError");
-
+const errMsg = require('../errors/messages')
 const bch = require("../services/blockchain");
 
 const createWallet = async payload => {
   // This may break in some environments, keep an eye on it
   const response = await Wallet.findByPk(payload.ownerid);
-  if (response) throw ApiError.badRequest("User already has a wallet");
+  if (response) throw ApiError.badRequest(errMsg.USER_ALREADY_HAS_WALLET);
 
   let wallet = 0;
   let found = true;
-  let contador = 0; //DEBUG
-  console.log('CREANDO BILLETERA')
+
   while(found){
-    console.log(`ITERACION ${contador}`)
-    contador += 1;
     wallet = bch.createWallet();
     found = await Wallet.findOne({
       'where': {
@@ -34,7 +31,7 @@ const createWallet = async payload => {
 const getWallet = async id => {
   let response = await Wallet.findByPk(id);
   if (!response) {
-    throw ApiError.notFound("Wallet not found");
+    throw ApiError.notFound(errMsg.WALLET_NOT_FOUND);
   }
 
   let balanceInEther = await bch.getWalletBalance(response.privatekey);
