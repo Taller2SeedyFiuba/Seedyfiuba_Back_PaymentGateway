@@ -161,7 +161,7 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
       return "on_review";
     }
   } catch (err) {
-    throw ApiError.externalServiceError(`Viewer couldn't be added: ${err.error.message}`);
+    throw ApiError.badRequest(`Viewer couldn't be added: ${err.error.message}`);
   }
   throw ApiError.externalServiceError("Viewer couldn't be added");
 }
