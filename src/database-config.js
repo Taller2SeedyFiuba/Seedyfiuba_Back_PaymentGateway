@@ -1,5 +1,5 @@
 const fs = require('fs');
-
+const { logDebug } = require('./utils/log')
 module.exports = {
   production: {
     url: process.env.DATABASE_URL,
@@ -8,12 +8,12 @@ module.exports = {
   },
   development: {
     url: process.env.DATABASE_URL,
-    logging: console.log,
+    logging: logDebug,
     dialect: 'postgres',
   },
   testing: {
     url: process.env.DATABASE_URL,
-    logging: console.log,
+    logging: logDebug,
     dialect: 'postgres',
   },
 };
