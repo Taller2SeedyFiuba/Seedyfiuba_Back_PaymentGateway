@@ -23,7 +23,7 @@ const _getWalletFromNetwork = (privatekey) => {
     const walletInstance = new ethers.Wallet(privatekey).connect(provider);
     return walletInstance;
   } catch (err) {
-    throw ApiError.externalServiceError(errMsg.KOVAN_REQ_ERROR);
+    throw ApiError.dependencyError(errMsg.KOVAN_REQ_ERROR);
   }
 }
 
@@ -96,9 +96,9 @@ const createProject = async (ownerAddress, stages) => {
     }
   } catch (err) {
     logError(err);
-    throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_MINING);
+    throw ApiError.dependencyError(errMsg.PROJECT_ERROR_MINING);
   }
-  throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_MINING);
+  throw ApiError.dependencyError(errMsg.PROJECT_ERROR_MINING);
 }
 
 const getProject = async (smcid) => {
@@ -113,7 +113,7 @@ const getProject = async (smcid) => {
       missingAmount: weisToEthers(tx.missingAmount)
     }
   } catch (err) {
-    throw ApiError.externalServiceError(errMsg.PROJECT_NOT_FOUND);
+    throw ApiError.dependencyError(errMsg.PROJECT_NOT_FOUND);
   }
 }
 
@@ -139,9 +139,9 @@ const transferToProject = async (smcid, privatekey, amount) => {
       return amount;
     }
   } catch (err) {
-    throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_FUNDING);
+    throw ApiError.dependencyError(errMsg.PROJECT_ERROR_FUNDING);
   }
-  throw ApiError.externalServiceError(errMsg.PROJECT_ERROR_FUNDING);
+  throw ApiError.dependencyError(errMsg.PROJECT_ERROR_FUNDING);
 }
 
 const addViwerToProject = async (smcid, privatekeyViewer) => {
@@ -165,7 +165,7 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
   } catch (err) {
     throw ApiError.badRequest(`${errMsg.VIEWER_ERROR_ADDING}: ${err.error.message}`);
   }
-  throw ApiError.externalServiceError(errMsg.VIEWER_ERROR_ADDING);
+  throw ApiError.dependencyError(errMsg.VIEWER_ERROR_ADDING);
 }
 
 const voteProjectStage = async (smcid, privatekeyViewer, stageNumber) => {
@@ -194,9 +194,9 @@ const voteProjectStage = async (smcid, privatekeyViewer, stageNumber) => {
     }
   } catch (err) {
     logError(err);
-    throw ApiError.externalServiceError(`${errMsg.VIEWER_ERROR_VOTING}: ${err.error.message}`);
+    throw ApiError.dependencyError(`${errMsg.VIEWER_ERROR_VOTING}: ${err.error.message}`);
   }
-  throw ApiError.externalServiceError(errMsg.VIEWER_ERROR_VOTING);
+  throw ApiError.dependencyError(errMsg.VIEWER_ERROR_VOTING);
 }
 
 module.exports = {

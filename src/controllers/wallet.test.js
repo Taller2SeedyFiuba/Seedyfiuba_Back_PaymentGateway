@@ -25,7 +25,7 @@ test("/getOneWallet successful response", async () => {
       data: testWall,
     },
   };
-
+  delete resObj.data.data.privatekey;
   const res = mockResponse();
 
   await get(req, res);

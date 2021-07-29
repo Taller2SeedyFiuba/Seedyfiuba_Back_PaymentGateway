@@ -3,7 +3,7 @@
 const { ApiError } = require("../errors/ApiError");
 const { validateProject, validateId, validateViewerVote, validateTransaction} = require("../models/validators");
 
-const { getProject, createProject } = require("../models/project");
+const { getProject, createProject, } = require("../models/project");
 const { getWallet } = require("../models/wallet");
 const errMsg = require('../errors/messages')
 const bch = require("../services/blockchain");

@@ -3,8 +3,16 @@ const testProj = {
   smcid: "10",
   projectid: "10",
   creationdate: "2021-06-23",
-  balance: "0.001",
 };
+
+const fundProj = {
+  ownerid: "testUser",
+  smcid: "11",
+  projectid: "11",
+  creationdate: "2021-06-23",
+};
+
+const projects = [testProj, fundProj];
 
 const createProject = async project => {
   return {
@@ -16,7 +24,7 @@ const createProject = async project => {
 };
 
 const getProject = async projectid => {
-  if (projectid === "10") return testProj;
+  return projects.find(obj => obj.projectid === projectid)
 };
 
-module.exports = { createProject, getProject, testProj };
+module.exports = { createProject, getProject, testProj, projects };
