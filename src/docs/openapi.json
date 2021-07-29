@@ -8,6 +8,10 @@
     {
       "name": "wallet",
       "description": "Everything about user-wallets"
+    },
+    {
+      "name": "projects",
+      "description": "Everything about projects"
     }
   ],
   "paths": {
@@ -94,6 +98,286 @@
           }
         }
       }
+    },
+    "/projects": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Create a project for a given user in smart-contract",
+        "operationId": "createProject",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerid": {
+                    "type": "string",
+                    "example": "uhasj31asidasdicaw"
+                  },
+                  "projectid": {
+                    "type": "number",
+                    "example": 120
+                  },
+                  "stages": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/projects/{projectid}": {
+      "get": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Get a project",
+        "operationId": "getProject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectid",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "User has no wallet."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/projects/{projectid}/transactions": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Create a project transaction for a given project",
+        "operationId": "createTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectid",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerid": {
+                    "type": "string",
+                    "example": "uhasj31asidasdicaw"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectWithAmount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/projects/{projectid}/viewers": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Adds a viewer for a given project",
+        "operationId": "createViwer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectid",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerid": {
+                    "type": "string",
+                    "example": "uhasj31asidasdicaw"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "Project not found."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
+    },
+    "/projects/{projectid}/viewers/{viewerid}/votes": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Adds a vote for a given viewer for a given project",
+        "operationId": "createVote",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectid",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Project ID"
+          },
+          {
+            "in": "path",
+            "name": "viewerid",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currentStage": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request."
+          },
+          "404": {
+            "description": "Viewer or project not found."
+          },
+          "default": {
+            "description": "Unexpected error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -117,6 +401,78 @@
             "type": "string",
             "description": "Balance en ethers",
             "example": "0.0023"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "projectid": {
+            "type": "number",
+            "example": 10
+          },
+          "smcid": {
+            "type": "number",
+            "example": 20
+          },
+          "ownerid": {
+            "type": "string",
+            "example": "7Ab685de2aD2506dBE722934834e3C4800D3c8E4"
+          },
+          "balance": {
+            "type": "string",
+            "description": "Balance en ethers",
+            "example": "0.0023"
+          },
+          "currentStage": {
+            "type": "number",
+            "example": 1
+          },
+          "state": {
+            "type": "number",
+            "example": "on_review"
+          },
+          "missingAmount": {
+            "type": "number",
+            "example": 2
+          }
+        }
+      },
+      "ProjectWithAmount": {
+        "type": "object",
+        "properties": {
+          "projectid": {
+            "type": "number",
+            "example": 10
+          },
+          "smcid": {
+            "type": "number",
+            "example": 20
+          },
+          "ownerid": {
+            "type": "string",
+            "example": "7Ab685de2aD2506dBE722934834e3C4800D3c8E4"
+          },
+          "balance": {
+            "type": "string",
+            "description": "Balance en ethers",
+            "example": "0.0023"
+          },
+          "currentStage": {
+            "type": "number",
+            "example": 1
+          },
+          "state": {
+            "type": "number",
+            "example": "on_review"
+          },
+          "missingAmount": {
+            "type": "number",
+            "example": 2
+          },
+          "amount": {
+            "type": "number",
+            "example": 2
           }
         }
       }
