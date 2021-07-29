@@ -163,7 +163,7 @@ const addViwerToProject = async (smcid, privatekeyViewer) => {
       return "on_review";
     }
   } catch (err) {
-    throw ApiError.externalServiceError(`${errMsg.VIEWER_ERROR_ADDING}: ${err.error.message}`);
+    throw ApiError.badRequest(`${errMsg.VIEWER_ERROR_ADDING}: ${err.error.message}`);
   }
   throw ApiError.externalServiceError(errMsg.VIEWER_ERROR_ADDING);
 }
