@@ -35,10 +35,19 @@ Docker-cli must be installed.
 
 4. For this service to properly work a SmartContract artifact based on https://github.com/Taller2SeedyFiuba/Seedyfiuba_SmartContract needs to be provided in an env variable. A local node can be run with that repo in JSONRPC mode. If a real test net is used then Infura is the output gateway.
 ## Usage
+Create external network if not exists:
+
+```docker
+docker network create my-net
+```
+
+Run service with associated DB:
 
 ```docker
 docker-compose up --b
 ```
+
+It's important to acknowledge that microservice start may fail if database is not ready. Solution to this situation resides in running the service again.
 
 ### Docs
 
